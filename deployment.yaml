@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app-exemplo
+    namespace: argo-exemplo
+    labels:
+        app: exemplo-argo
+spec:
+    selector:
+        matchLabels:
+            app: exemplo-argo
+        replicas: 1
+        template:
+            metadata:
+                labels:
+                    app: exemplo-argo
+            spec:
+                containers:
+                - name: exemplo-argo
+                  image: nginx:1.20
+                  imagePullPolicy: Always
+                  ports:
+                  - containerPort: 5000
