@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
     name: example-service
-    namespace: argo-exemplo
+    namespace: canaries
 spec:
     selector:
         app: exemplo-argo
