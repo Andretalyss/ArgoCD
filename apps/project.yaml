@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+    name: project-test
+    namespace: argocd
+spec:
+  description: Arquivos ambiente de teste
+  sourceRepos:
+  - "*"
+  destinations:
+  - namespace: 'teste*'   # Allow all namespace that contains teste in name.
+    server: https://kubernetes.default.svc
+
+  # It's only permitted create namespaces for argocd inside the cluster.
+  # Só é permitido o argo criar namespaces dentro do cluster.
+  clusterResourceWhitelist:
+  - group: ''
+    kind: 'Namespace'
+
+  # It's only permitted deploy archives of kind [ deployments, services and ingress ].
+  # Só é permitido ao argo deployar deployments, services and ingresses.
+  namespaceResourceWhitelist:
+  - group: 'apps'
+    kind: Deployment
+  - group: ''
+    kind: Service
+  - group: 'networking.k8s.io'
+    kind: Ingress
