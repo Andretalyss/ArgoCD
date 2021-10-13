@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: argo-exemplo
+    namespace: argocd
+spec:
+    project: project-test-production               # Name of Argo Project with your rules.
+    source:
+        repoURL: https://github.com/Andretalyss/argocd.git      # Project URL in git
+        targetRevision: HEAD            # Specific branch or commit.
+        path: k8s/overlays/production                         # Specific a path in the repoURL for argoCD monitore.
+
+        # Here you specific how build you applications, using recurse, we use kubectl normally.
+        # If we not specific the flag "directory" the argocd will can search for archives kustomization, helm for deploy applciations.
+        
+        # directory:
+        #    recurse: true               
+    destination:
+        server: https://kubernetes.default.svc  # Specific the cluster where argocd will go deploy applications.
+        namespace: argo-exemplo                 # Namespace where argocd will go deploy applications or create if not exists.
+    syncPolicy:
+        automated:
+            prune: true                     # Delete the last deploy after a new commit.
+            selfHeal: true                  # If happen modifications external from git, is not permitted by argocd.
+            allowEmpty: true                # Allow monitoring empty repositories.
+        syncOptions:
+        - PrunePropagationPolicy=foreground
+        - CreateNamespace=true              # Allow creation of namespace in the cluster.
+        - PruneLast=true
+        retry:
+            limit: 5
+            backoff:
+                duration: 5s
+                factor: 2
+                maxDuration: 1m

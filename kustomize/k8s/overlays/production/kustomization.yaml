@@ -1,0 +1,12 @@
+bases:
+  - ../../bases
+
+# Change the value of image in deployment.yaml for the new_image-teste-1.0.0
+images:
+  - name: old_image
+    newName: new_image
+    newTag: teste-1.0.0
+
+# Merge of the script in env.yaml with deployment.yaml in bases folder.
+patchesStrategicMerge:
+  - env.yaml
